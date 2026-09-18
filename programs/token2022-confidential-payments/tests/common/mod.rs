@@ -23,17 +23,18 @@ use {
     solana_message::{Message, VersionedMessage},
     solana_signer::Signer,
     solana_transaction::versioned::VersionedTransaction,
+    solana_zk_elgamal_proof_interface::{
+        self as zk_elgamal_proof_program,
+        instruction::{ContextStateInfo, ProofInstruction},
+        proof_data::PubkeyValidityProofContext,
+        state::ProofContextState,
+    },
     solana_zk_sdk::{
         encryption::{
             auth_encryption::{AeCiphertext, AeKey},
             elgamal::ElGamalKeypair,
         },
-        zk_elgamal_proof_program::{
-            self,
-            instruction::{ContextStateInfo, ProofInstruction},
-            proof_data::{PubkeyValidityProofContext, PubkeyValidityProofData},
-            state::ProofContextState,
-        },
+        zk_elgamal_proof_program::build_pubkey_validity_proof_data,
     },
 };
 
@@ -95,7 +96,7 @@ impl Fixture {
         // must securely persist or deterministically recover these keys.
         let elgamal = ElGamalKeypair::new_rand();
         let aes = AeKey::new_rand();
-        let proof = PubkeyValidityProofData::new(&elgamal).unwrap();
+        let proof = build_pubkey_validity_proof_data(&elgamal).unwrap();
         let proof_context = Keypair::new();
         let size = std::mem::size_of::<ProofContextState<PubkeyValidityProofContext>>();
         let create = solana_system_interface::instruction::create_account(

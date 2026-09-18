@@ -27,8 +27,10 @@ anchor-spl = { version = "=1.1.2", default-features = false, features = ["token"
 spl-token-confidential-transfer-proof-extraction = "=0.5.1"
 
 [dev-dependencies]
-# Match the proof verifier bundled with LiteSVM.
-solana-zk-sdk = "=5.0.1"
+# Client proof generation uses the SDK with split proof-interface types.
+solana-zk-sdk = "=6.0.1"
+solana-zk-elgamal-proof-interface = "=0.1.2"
+spl-token-confidential-transfer-proof-generation = "=0.6.0"
 bytemuck = "1"
 solana-system-interface = { version = "2", features = ["bincode"] }
 litesvm = "=0.16.0"

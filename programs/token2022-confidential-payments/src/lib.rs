@@ -42,4 +42,18 @@ pub mod token2022_confidential_payments {
             new_decryptable_available_balance,
         )
     }
+
+    /// Sends confidential funds from the owner's available balance to the recipient's pending balance.
+    pub fn transfer_confidential(
+        ctx: Context<TransferConfidential>,
+        new_source_decryptable_available_balance: [u8; 36],
+        transfer_amount_auditor_ciphertext_lo: [u8; 64],
+        transfer_amount_auditor_ciphertext_hi: [u8; 64],
+    ) -> Result<()> {
+        ctx.accounts.handler(
+            new_source_decryptable_available_balance,
+            transfer_amount_auditor_ciphertext_lo,
+            transfer_amount_auditor_ciphertext_hi,
+        )
+    }
 }

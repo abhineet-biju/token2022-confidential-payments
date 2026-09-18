@@ -10,3 +10,6 @@ pub use deposit::*;
 
 pub mod apply_pending;
 pub use apply_pending::*;
+
+pub mod transfer_confidential;
+pub use transfer_confidential::*;

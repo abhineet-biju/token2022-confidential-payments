@@ -4,7 +4,7 @@ use {
     anchor_spl::{associated_token::spl_associated_token_account, token_2022::spl_token_2022},
     common::{send, Fixture},
     solana_signer::Signer,
-    solana_zk_sdk::zk_elgamal_proof_program::instruction::{close_context_state, ContextStateInfo},
+    solana_zk_elgamal_proof_interface::instruction::{close_context_state, ContextStateInfo},
 };
 
 #[test]
