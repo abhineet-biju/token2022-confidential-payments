@@ -13,4 +13,16 @@ pub mod token2022_confidential_payments {
     pub fn initialize_mint(ctx: Context<InitializeMint>, decimals: u8) -> Result<()> {
         ctx.accounts.handler(decimals)
     }
+
+    /// Creates or reuses the owner's ATA and enables its confidential balances.
+    pub fn configure_account(
+        ctx: Context<ConfigureAccount>,
+        decryptable_zero_balance: [u8; 36],
+        maximum_pending_balance_credit_counter: u64,
+    ) -> Result<()> {
+        ctx.accounts.handler(
+            decryptable_zero_balance,
+            maximum_pending_balance_credit_counter,
+        )
+    }
 }
