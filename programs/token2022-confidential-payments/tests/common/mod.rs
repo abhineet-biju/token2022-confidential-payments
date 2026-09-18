@@ -153,6 +153,7 @@ impl Fixture {
         )
     }
 
+    #[allow(dead_code)] // Some test binaries configure a custom credit limit instead.
     pub fn configure(&mut self) {
         let ix = self.instruction();
         send(&mut self.svm, &self.payer, &[ix], &[&self.owner]).unwrap();

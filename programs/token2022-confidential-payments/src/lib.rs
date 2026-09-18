@@ -30,4 +30,16 @@ pub mod token2022_confidential_payments {
     pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
         ctx.accounts.handler(amount)
     }
+
+    /// Makes pending confidential funds available for spending.
+    pub fn apply_pending(
+        ctx: Context<ApplyPending>,
+        expected_pending_balance_credit_counter: u64,
+        new_decryptable_available_balance: [u8; 36],
+    ) -> Result<()> {
+        ctx.accounts.handler(
+            expected_pending_balance_credit_counter,
+            new_decryptable_available_balance,
+        )
+    }
 }
