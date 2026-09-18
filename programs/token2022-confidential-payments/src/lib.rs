@@ -25,4 +25,9 @@ pub mod token2022_confidential_payments {
             maximum_pending_balance_credit_counter,
         )
     }
+
+    /// Moves public tokens into the owner's confidential pending balance.
+    pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+        ctx.accounts.handler(amount)
+    }
 }
