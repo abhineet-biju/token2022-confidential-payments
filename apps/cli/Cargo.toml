@@ -1,0 +1,23 @@
+[package]
+name = "confidential-cli"
+version = "0.1.0"
+edition.workspace = true
+rust-version = "1.97"
+publish = false
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+anchor-lang = "=1.1.2"
+anchor-spl = { version = "=1.1.2", default-features = false, features = ["token", "token_2022", "associated_token"] }
+token2022-confidential-payments = { path = "../../programs/token2022-confidential-payments", features = ["no-entrypoint"] }
+solana-rpc-client = "=3.1.12"
+solana-commitment-config = "3"
+solana-keypair = "3.1.2"
+solana-signer = "3"
+solana-transaction = { version = "3.1", features = ["bincode"] }
+solana-system-interface = { version = "2", features = ["bincode"] }
+solana-zk-sdk = "=6.0.1"
+solana-zk-elgamal-proof-interface = "=0.1.2"
+spl-token-confidential-transfer-proof-generation = "=0.6.0"
+bytemuck = "1"

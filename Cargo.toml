@@ -1,7 +1,9 @@
 [workspace]
 members = [
-    "programs/*"
+    "programs/*",
+    "apps/cli"
 ]
+default-members = ["programs/*"]
 resolver = "2"
 
 [workspace.package]
