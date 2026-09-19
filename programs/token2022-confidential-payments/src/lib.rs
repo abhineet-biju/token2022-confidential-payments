@@ -56,4 +56,14 @@ pub mod token2022_confidential_payments {
             transfer_amount_auditor_ciphertext_hi,
         )
     }
+
+    /// Converts confidential available funds back to the owner's public token balance.
+    pub fn withdraw(
+        ctx: Context<Withdraw>,
+        amount: u64,
+        new_decryptable_available_balance: [u8; 36],
+    ) -> Result<()> {
+        ctx.accounts
+            .handler(amount, new_decryptable_available_balance)
+    }
 }

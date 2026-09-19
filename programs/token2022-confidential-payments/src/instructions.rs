@@ -13,3 +13,6 @@ pub use apply_pending::*;
 
 pub mod transfer_confidential;
 pub use transfer_confidential::*;
+
+pub mod withdraw;
+pub use withdraw::*;

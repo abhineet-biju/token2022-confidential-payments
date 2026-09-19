@@ -26,7 +26,7 @@ use {
     solana_zk_elgamal_proof_interface::{
         self as zk_elgamal_proof_program,
         instruction::{ContextStateInfo, ProofInstruction},
-        proof_data::PubkeyValidityProofContext,
+        proof_data::{PubkeyValidityProofContext, ZkProofData},
         state::ProofContextState,
     },
     solana_zk_sdk::{
@@ -113,7 +113,6 @@ impl Fixture {
             }),
             &proof,
         );
-        // The real ZK program verifies the proof; no fabricated context is injected.
         send(&mut svm, &payer, &[create, verify], &[&proof_context]).unwrap();
         let ata = get_associated_token_address_with_program_id(
             &owner.pubkey(),
@@ -205,4 +204,33 @@ impl Fixture {
                 .unwrap();
         assert_eq!(balance.decrypt(&self.aes), Some(0));
     }
+}
+
+#[allow(dead_code)] // Shared by proof-consuming instruction test binaries.
+pub fn stage_proof<T: bytemuck::Pod + ZkProofData<U>, U: bytemuck::Pod>(
+    f: &mut Fixture,
+    authority: Pubkey,
+    kind: ProofInstruction,
+    proof: &T,
+) -> Pubkey {
+    let context = Keypair::new();
+    let size = std::mem::size_of::<ProofContextState<U>>();
+    let create = solana_system_interface::instruction::create_account(
+        &f.payer.pubkey(),
+        &context.pubkey(),
+        f.svm.minimum_balance_for_rent_exemption(size),
+        size as u64,
+        &zk_elgamal_proof_program::id(),
+    );
+    send(&mut f.svm, &f.payer, &[create], &[&context]).unwrap();
+    // Separate transactions keep the large range proof within the transaction size limit.
+    let verify = kind.encode_verify_proof(
+        Some(ContextStateInfo {
+            context_state_account: &context.pubkey(),
+            context_state_authority: &authority,
+        }),
+        proof,
+    );
+    send(&mut f.svm, &f.payer, &[verify], &[]).unwrap();
+    context.pubkey()
 }

@@ -17,15 +17,11 @@ use {
             state::Account,
         },
     },
-    bytemuck::Pod,
-    common::{send, Fixture},
+    common::{send, stage_proof, Fixture},
     solana_keypair::Keypair,
     solana_signer::Signer,
-    solana_zk_elgamal_proof_interface::{
-        self as zk,
-        instruction::{close_context_state, ContextStateInfo, ProofInstruction},
-        proof_data::ZkProofData,
-        state::ProofContextState,
+    solana_zk_elgamal_proof_interface::instruction::{
+        close_context_state, ContextStateInfo, ProofInstruction,
     },
     solana_zk_sdk::{
         encryption::{
@@ -39,34 +35,6 @@ use {
         transfer::{transfer_split_proof_data, TransferProofData},
     },
 };
-
-fn stage_proof<T: Pod + ZkProofData<U>, U: Pod>(
-    f: &mut Fixture,
-    authority: Pubkey,
-    kind: ProofInstruction,
-    proof: &T,
-) -> Pubkey {
-    let context = Keypair::new();
-    let size = std::mem::size_of::<ProofContextState<U>>();
-    let create = solana_system_interface::instruction::create_account(
-        &f.payer.pubkey(),
-        &context.pubkey(),
-        f.svm.minimum_balance_for_rent_exemption(size),
-        size as u64,
-        &zk::id(),
-    );
-    send(&mut f.svm, &f.payer, &[create], &[&context]).unwrap();
-    // Separate transactions keep the large range proof within the transaction size limit.
-    let verify = kind.encode_verify_proof(
-        Some(ContextStateInfo {
-            context_state_account: &context.pubkey(),
-            context_state_authority: &authority,
-        }),
-        proof,
-    );
-    send(&mut f.svm, &f.payer, &[verify], &[]).unwrap();
-    context.pubkey()
-}
 
 struct Recipient {
     owner: Keypair,
